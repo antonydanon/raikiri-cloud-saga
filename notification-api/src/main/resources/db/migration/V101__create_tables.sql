@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGSERIAL PRIMARY KEY,
+    tx_id VARCHAR(36) NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    status VARCHAR(20) DEFAULT 'SENT'
+);
