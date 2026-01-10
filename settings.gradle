@@ -1,0 +1,4 @@
+rootProject.name = 'raikiri-cloud-saga'
+
+includeBuild 'eureka-server'
+includeBuild 'api-gateway'
