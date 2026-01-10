@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+    private static final double PROBABILITY_OF_FAILURE = 0.4;
+
     private final PaymentRepository paymentRepository;
 
     public PaymentResponse save(PaymentRequest paymentRequest) {
@@ -28,7 +30,7 @@ public class PaymentService {
     }
 
     private void simulateError() {
-        if (Math.random() < 0.05) {
+        if (Math.random() < PROBABILITY_OF_FAILURE) {
             throw new RuntimeException("An unexpected error has occurred!");
         }
     }

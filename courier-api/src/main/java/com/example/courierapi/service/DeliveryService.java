@@ -14,7 +14,6 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     public DeliveryResponse save(DeliveryRequest deliveryRequest) {
-        simulateError();
         Delivery delivery = new Delivery();
         delivery.setTxId(deliveryRequest.getTxId());
         delivery.setAddress(deliveryRequest.getAddress());
@@ -25,11 +24,5 @@ public class DeliveryService {
     @Transactional
     public void rollbackToSave(String txId) {
         deliveryRepository.deleteByTxId(txId);
-    }
-
-    private void simulateError() {
-        if (Math.random() < 0.1) {
-            throw new RuntimeException("An unexpected error has occurred!");
-        }
     }
 }

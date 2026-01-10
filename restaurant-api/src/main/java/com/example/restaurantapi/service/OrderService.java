@@ -14,7 +14,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     public OrderResponse save(OrderRequest orderRequest) {
-        simulateError();
         Order order = new Order();
         order.setTxId(orderRequest.getTxId());
         order.setAmount(orderRequest.getAmount());
@@ -25,11 +24,5 @@ public class OrderService {
     @Transactional
     public void rollbackToSave(String txId) {
         orderRepository.deleteByTxId(txId);
-    }
-
-    private void simulateError() {
-        if (Math.random() < 0.1) {
-            throw new RuntimeException("An unexpected error has occurred!");
-        }
     }
 }

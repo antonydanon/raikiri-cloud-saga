@@ -14,7 +14,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     public NotificationResponse save(NotificationRequest notificationRequest) {
-        simulateError();
         Notification notification = new Notification();
         notification.setTxId(notificationRequest.getTxId());
         notification.setMessage(notificationRequest.getMessage());
@@ -25,11 +24,5 @@ public class NotificationService {
     @Transactional
     public void rollbackToSave(String txId) {
         notificationRepository.deleteByTxId(txId);
-    }
-
-    private void simulateError() {
-        if (Math.random() < 0.1) {
-            throw new RuntimeException("An unexpected error has occurred!");
-        }
     }
 }
