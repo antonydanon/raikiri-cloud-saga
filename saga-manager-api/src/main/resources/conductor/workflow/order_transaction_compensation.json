@@ -1,0 +1,120 @@
+{
+  "name": "order_transaction_compensation",
+  "description": "A transaction to roll back the creation of an order.",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "cancel_notification",
+      "taskReferenceName": "cancel_step_1",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/notification-api/notifications/rollback/${workflow.input.txId}",
+          "method": "DELETE",
+          "connectionTimeOut": 30000,
+          "readTimeOut": 30000,
+          "retryCount": 3
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "cancel_payment",
+      "taskReferenceName": "cancel_step_2",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/payment-api/payments/rollback/${workflow.input.txId}",
+          "method": "DELETE",
+          "connectionTimeOut": 30000,
+          "readTimeOut": 30000,
+          "retryCount": 3
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "cancel_delivery",
+      "taskReferenceName": "cancel_step_3",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/courier-api/deliveries/rollback/${workflow.input.txId}",
+          "method": "DELETE",
+          "connectionTimeOut": 30000,
+          "readTimeOut": 30000,
+          "retryCount": 3
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "cancel_order",
+      "taskReferenceName": "cancel_step_4",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/restaurant-api/orders/rollback/${workflow.input.txId}",
+          "method": "DELETE",
+          "connectionTimeOut": 30000,
+          "readTimeOut": 30000,
+          "retryCount": 3
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "example@email.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "enforceSchema": true,
+  "metadata": {},
+  "maskedFields": []
+}

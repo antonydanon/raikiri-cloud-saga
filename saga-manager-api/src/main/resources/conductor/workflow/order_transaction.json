@@ -1,0 +1,133 @@
+{
+  "name": "order_transaction",
+  "description": "A transaction to create an order.",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "apply_order",
+      "taskReferenceName": "step_1",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/restaurant-api/orders",
+          "method": "POST",
+          "body": {
+            "txId": "${workflow.input.txId}",
+            "amount": "${workflow.input.amount}"
+          },
+          "connectionTimeOut": 5000,
+          "readTimeOut": 10000
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "apply_delivery",
+      "taskReferenceName": "step_2",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/courier-api/deliveries",
+          "method": "POST",
+          "body": {
+            "txId": "${workflow.input.txId}",
+            "address": "${workflow.input.address}"
+          },
+          "connectionTimeOut": 5000,
+          "readTimeOut": 10000
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "apply_payment",
+      "taskReferenceName": "step_3",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/payment-api/payments",
+          "method": "POST",
+          "body": {
+            "txId": "${workflow.input.txId}",
+            "amount": "${workflow.input.amount}"
+          },
+          "connectionTimeOut": 5000,
+          "readTimeOut": 10000
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "apply_notification",
+      "taskReferenceName": "step_4",
+      "inputParameters": {
+        "http_request": {
+          "uri": "http://host.docker.internal:8082/notification-api/notifications",
+          "method": "POST",
+          "body": {
+            "txId": "${workflow.input.txId}",
+            "message": "${workflow.input.message}"
+          },
+          "connectionTimeOut": 5000,
+          "readTimeOut": 10000
+        }
+      },
+      "type": "HTTP",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "failureWorkflow": "order_transaction_compensation",
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "example@email.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "enforceSchema": true,
+  "metadata": {},
+  "maskedFields": []
+}
