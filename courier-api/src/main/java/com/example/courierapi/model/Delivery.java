@@ -14,5 +14,4 @@ public class Delivery {
     private Long id;
     private String txId;
     private String address;
-    private String status;
 }

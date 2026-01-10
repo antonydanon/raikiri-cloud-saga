@@ -16,5 +16,4 @@ public class Payment {
     private Long id;
     private String txId;
     private BigDecimal amount;
-    private String status;
 }
