@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS payments
+(
+    id BIGSERIAL PRIMARY KEY,
+    tx_id VARCHAR(36) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'PENDING'
+);
