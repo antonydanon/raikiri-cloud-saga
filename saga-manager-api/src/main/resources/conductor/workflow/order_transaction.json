@@ -8,7 +8,7 @@
       "taskReferenceName": "step_1",
       "inputParameters": {
         "http_request": {
-          "uri": "http://host.docker.internal:8082/restaurant-api/orders",
+          "uri": "http://api-gateway:8080/restaurant-api/orders",
           "method": "POST",
           "body": {
             "txId": "${workflow.input.txId}",
@@ -36,7 +36,7 @@
       "taskReferenceName": "step_2",
       "inputParameters": {
         "http_request": {
-          "uri": "http://host.docker.internal:8082/courier-api/deliveries",
+          "uri": "http://api-gateway:8080/courier-api/deliveries",
           "method": "POST",
           "body": {
             "txId": "${workflow.input.txId}",
@@ -64,7 +64,7 @@
       "taskReferenceName": "step_3",
       "inputParameters": {
         "http_request": {
-          "uri": "http://host.docker.internal:8082/payment-api/payments",
+          "uri": "http://api-gateway:8080/payment-api/payments",
           "method": "POST",
           "body": {
             "txId": "${workflow.input.txId}",
@@ -92,7 +92,7 @@
       "taskReferenceName": "step_4",
       "inputParameters": {
         "http_request": {
-          "uri": "http://host.docker.internal:8082/notification-api/notifications",
+          "uri": "http://api-gateway:8080/notification-api/notifications",
           "method": "POST",
           "body": {
             "txId": "${workflow.input.txId}",
