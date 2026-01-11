@@ -23,8 +23,7 @@ services:
       - SERVER_PORT=${EUREKA_SERVER_PORT}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      conductor-service:
-        condition: service_started
+      - conductor-service
     networks:
       - raikiri-cloud-saga-net
 
@@ -37,8 +36,7 @@ services:
       - SERVER_PORT=${DEFAULT_SERVER_PORT}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      eureka-server:
-        condition: service_started
+      - eureka-server
     networks:
       - raikiri-cloud-saga-net
 
@@ -129,12 +127,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      eureka-server:
-        condition: service_started
-      api-gateway:
-        condition: service_started
-      postgres-restaurant:
-        condition: service_started
+      - eureka-server
+      - api-gateway
+      - postgres-restaurant
     networks:
       - raikiri-cloud-saga-net
 
@@ -150,12 +145,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      eureka-server:
-        condition: service_started
-      api-gateway:
-        condition: service_started
-      postgres-courier:
-        condition: service_started
+      - eureka-server
+      - api-gateway
+      - postgres-courier
     networks:
       - raikiri-cloud-saga-net
 
@@ -171,12 +163,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      eureka-server:
-        condition: service_started
-      api-gateway:
-        condition: service_started
-      postgres-payment:
-        condition: service_started
+      - eureka-server
+      - api-gateway
+      - postgres-payment
     networks:
       - raikiri-cloud-saga-net
 
@@ -192,12 +181,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      eureka-server:
-        condition: service_started
-      api-gateway:
-        condition: service_started
-      postgres-notification:
-        condition: service_started
+      - eureka-server
+      - api-gateway
+      - postgres-notification
     networks:
       - raikiri-cloud-saga-net
 
