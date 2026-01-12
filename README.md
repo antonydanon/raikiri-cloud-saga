@@ -9,5 +9,6 @@
 ## Как запустить
 ```bash
 git clone https://github.com/antonydanon/raikiri-cloud-saga.git
+cd raikiri-cloud-saga
 docker compose build
 docker compose up
