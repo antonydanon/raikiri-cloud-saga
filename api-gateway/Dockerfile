@@ -8,6 +8,7 @@ COPY settings.gradle .
 COPY gradle gradle/
 COPY src src/
 
+RUN chmod +x /app/gradlew
 RUN ./gradlew clean bootJar --no-daemon
 
 FROM eclipse-temurin:21-jre-alpine AS runtime
