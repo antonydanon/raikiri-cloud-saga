@@ -17,6 +17,10 @@ restaurant-api -> courier-api -> payment-api -> notification-api.
 
 `curl "http://localhost:8081/saga-manager-api/transactions?statuses=COMPLETED,CANCELED&startDate=2026-01-12%2000:00:00&endDate=2026-01-19%2000:00:00&countPerPage=10&pageNumber=0"`
 
+Eureka server: http://localhost:8761/
+API Gateway: http://localhost:8081/
+Conductor UI: http://localhost:5000/
+
 ## Как запустить
 ```bash
 git clone https://github.com/antonydanon/raikiri-cloud-saga.git
