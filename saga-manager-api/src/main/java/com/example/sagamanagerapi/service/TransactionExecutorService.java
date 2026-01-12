@@ -26,7 +26,7 @@ public class TransactionExecutorService {
     private final TransactionService transactionService;
     private final Faker dataFaker;
 
-    @Scheduled(fixedRate = 15000, initialDelay = 10000)
+    @Scheduled(fixedRate = 15000, initialDelay = 50000)
     public void launchOrderTransaction() throws ExecutionException, InterruptedException {
         String txId = UUID.randomUUID().toString();
 

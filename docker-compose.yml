@@ -11,6 +11,34 @@ services:
       - "${CONDUCTOR_UI_PORT}:${CONDUCTOR_UI_PORT}"
     volumes:
       - conductor_data:/app/data
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:${DEFAULT_SERVER_PORT}/api/admin/config || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - raikiri-cloud-saga-net
+
+  saga-manager-api:
+    build: ./saga-manager-api
+    container_name: saga-manager-api
+    ports:
+      - "${SAGA_MANAGER_API_PORT}:${DEFAULT_SERVER_PORT}"
+    environment:
+      - SERVER_PORT=${DEFAULT_SERVER_PORT}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-saga-manager:${DEFAULT_POSTGRES_PORT}/${SAGA_MANAGER_DATABASE_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DEFAULT_POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
+      - CONDUCTOR_API=http://conductor-service:${DEFAULT_SERVER_PORT}/api
+    depends_on:
+      conductor-service:
+        condition: service_healthy
+      postgres-saga-manager:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -23,7 +51,8 @@ services:
       - SERVER_PORT=${EUREKA_SERVER_PORT}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - conductor-service
+      conductor-service:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -36,7 +65,10 @@ services:
       - SERVER_PORT=${DEFAULT_SERVER_PORT}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - eureka-server
+      conductor-service:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -112,6 +144,12 @@ services:
       - "${SAGA_MANAGER_POSTGRES_PORT}:${DEFAULT_POSTGRES_PORT}"
     volumes:
       - pg_saga_manager_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - raikiri-cloud-saga-net
 
@@ -127,9 +165,12 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - eureka-server
-      - api-gateway
-      - postgres-restaurant
+      conductor-service:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      postgres-restaurant:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -145,9 +186,12 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - eureka-server
-      - api-gateway
-      - postgres-courier
+      conductor-service:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      postgres-courier:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -163,9 +207,12 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - eureka-server
-      - api-gateway
-      - postgres-payment
+      conductor-service:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      postgres-payment:
+        condition: service_started
     networks:
       - raikiri-cloud-saga-net
 
@@ -181,32 +228,11 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
-      - eureka-server
-      - api-gateway
-      - postgres-notification
-    networks:
-      - raikiri-cloud-saga-net
-
-  saga-manager-api:
-    build: ./saga-manager-api
-    container_name: saga-manager-api
-    ports:
-      - "${SAGA_MANAGER_API_PORT}:${DEFAULT_SERVER_PORT}"
-    environment:
-      - SERVER_PORT=${DEFAULT_SERVER_PORT}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-saga-manager:${DEFAULT_POSTGRES_PORT}/${SAGA_MANAGER_DATABASE_NAME}
-      - SPRING_DATASOURCE_USERNAME=${DEFAULT_POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
-      - CONDUCTOR_API=http://conductor-service:${DEFAULT_SERVER_PORT}/api
-    depends_on:
+      conductor-service:
+        condition: service_healthy
       eureka-server:
         condition: service_started
-      api-gateway:
-        condition: service_started
-      postgres-saga-manager:
-        condition: service_started
-      conductor-service:
+      postgres-notification:
         condition: service_started
     networks:
       - raikiri-cloud-saga-net
