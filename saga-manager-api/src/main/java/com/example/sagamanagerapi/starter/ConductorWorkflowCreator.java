@@ -23,7 +23,7 @@ public class ConductorWorkflowCreator implements ApplicationRunner {
     private final WorkflowExecutor executor;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         for (String workflowPath : WORKFLOW_PATHS) {
             String json = getContentFrom(workflowPath);
             WorkflowDef workflowDef = objectMapper.readValue(json, WorkflowDef.class);

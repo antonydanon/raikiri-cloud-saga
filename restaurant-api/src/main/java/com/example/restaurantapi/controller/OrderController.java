@@ -1,7 +1,8 @@
 package com.example.restaurantapi.controller;
 
-import com.example.restaurantapi.dto.OrderRequest;
-import com.example.restaurantapi.dto.OrderResponse;
+import com.example.restaurantapi.dto.OrderSaveDtoRequest;
+import com.example.restaurantapi.dto.OrderSaveDtoResponse;
+import com.example.restaurantapi.model.Order;
 import com.example.restaurantapi.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> save(@RequestBody OrderRequest orderRequest) {
-        return ResponseEntity.ok().body(orderService.save(orderRequest));
+    public OrderSaveDtoResponse save(@RequestBody OrderSaveDtoRequest request) {
+        Order order = orderService.save(request.txId(), request.amount());
+        return new OrderSaveDtoResponse(order.getId());
     }
 
     @DeleteMapping("/rollback/{txId}")

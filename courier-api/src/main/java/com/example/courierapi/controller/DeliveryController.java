@@ -1,7 +1,8 @@
 package com.example.courierapi.controller;
 
-import com.example.courierapi.dto.DeliveryRequest;
-import com.example.courierapi.dto.DeliveryResponse;
+import com.example.courierapi.dto.DeliverySaveDtoRequest;
+import com.example.courierapi.dto.DeliverySaveDtoResponse;
+import com.example.courierapi.model.Delivery;
 import com.example.courierapi.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,9 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @PostMapping
-    public ResponseEntity<DeliveryResponse> save(@RequestBody DeliveryRequest deliveryRequest) {
-        return ResponseEntity.ok(deliveryService.save(deliveryRequest));
+    public DeliverySaveDtoResponse save(@RequestBody DeliverySaveDtoRequest request) {
+        Delivery delivery = deliveryService.save(request.txId(), request.address());
+        return new DeliverySaveDtoResponse(delivery.getId());
     }
 
     @DeleteMapping("/rollback/{txId}")

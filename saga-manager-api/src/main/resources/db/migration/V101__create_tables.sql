@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS transactions
     execution_date TIMESTAMP NOT NULL,
     status_id BIGSERIAL NOT NULL,
 
-    foreign key (status_id) references statuses (id)
-    on delete restrict
-    on update cascade
+    FOREIGN KEY (status_id) REFERENCES statuses (id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );

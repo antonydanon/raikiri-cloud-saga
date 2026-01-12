@@ -1,7 +1,8 @@
 package com.example.paymentapi.controller;
 
-import com.example.paymentapi.dto.PaymentRequest;
-import com.example.paymentapi.dto.PaymentResponse;
+import com.example.paymentapi.dto.PaymentSaveDtoRequest;
+import com.example.paymentapi.dto.PaymentSaveDtoResponse;
+import com.example.paymentapi.model.Payment;
 import com.example.paymentapi.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<PaymentResponse> save(@RequestBody PaymentRequest paymentRequest) {
-        return ResponseEntity.ok().body(paymentService.save(paymentRequest));
+    public PaymentSaveDtoResponse save(@RequestBody PaymentSaveDtoRequest request) {
+        Payment payment = paymentService.save(request.txId(), request.amount());
+        return new PaymentSaveDtoResponse(payment.getId());
     }
 
     @DeleteMapping("/rollback/{txId}")

@@ -11,11 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class ConductorConfiguration {
     private static final int DEFAULT_POLLING_INTERVAL = 15;
 
-    @Value("${conductor.api}")
-    private String conductorApi;
-
     @Bean
-    public ApiClient apiClient() {
+    public ApiClient apiClient(@Value("${conductor.api}") String conductorApi) {
         return new ApiClient(conductorApi);
     }
 

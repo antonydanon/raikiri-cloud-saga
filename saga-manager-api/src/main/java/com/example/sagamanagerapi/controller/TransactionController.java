@@ -1,17 +1,22 @@
 package com.example.sagamanagerapi.controller;
 
-import com.example.sagamanagerapi.dto.TransactionResponse;
+import com.example.sagamanagerapi.dto.TransactionDtoResponse;
+import com.example.sagamanagerapi.mapper.TransactionMapper;
+import com.example.sagamanagerapi.model.Transaction;
 import com.example.sagamanagerapi.service.TransactionService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import static com.example.sagamanagerapi.utils.ValidationUtils.DATE_PATTERN;
 
 @Validated
 @RestController
@@ -21,19 +26,15 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<Page<TransactionResponse>> getAll(
+    public Page<TransactionDtoResponse> getAll(
+            @RequestParam List<String> statuses,
             @RequestParam @Pattern(
-                    regexp = "COMPLETED|CANCELED|ALL",
-                    message = "Status must be COMPLETED, CANCELED or ALL."
-            )
-            String status,
-            @RequestParam @Pattern(
-                    regexp = "^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01]) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$",
+                    regexp = DATE_PATTERN,
                     message = "Start date format must be yyyy-mm-dd hh:mm:ss."
             )
             String startDate,
             @RequestParam @Pattern(
-                    regexp = "^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01]) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$",
+                    regexp = DATE_PATTERN,
                     message = "End date format must be yyyy-mm-dd hh:mm:ss."
             )
             String endDate,
@@ -41,10 +42,10 @@ public class TransactionController {
             int countPerPage,
             @RequestParam @Min(value = 0, message = "Page index must not be less than zero.")
             int pageNumber) {
-        Page<TransactionResponse> page = transactionService.getAllBySearchAndPage(
-                status, startDate, endDate,
+        Page<Transaction> page = transactionService.getAllBySearchAndPage(
+                statuses, startDate, endDate,
                 countPerPage, pageNumber
         );
-        return ResponseEntity.ok().body(page);
+        return page.map(TransactionMapper::mapTransactionToTransactionDtoResponse);
     }
 }

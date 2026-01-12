@@ -34,7 +34,7 @@ public class TransactionExecutorService {
                 TRANSACTION_NAME, DEFAULT_TRANSACTION_VERSION,
                 prepareStubParameters(txId)
         ).get();
-        transactionService.createNewAndSave(
+        transactionService.save(
                 txId, new Timestamp(workflow.getStartTime()),
                 determineTransactionStatus(workflow.getStatus().name())
         );

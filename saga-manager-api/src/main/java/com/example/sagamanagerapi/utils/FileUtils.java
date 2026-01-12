@@ -1,9 +1,13 @@
 package com.example.sagamanagerapi.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FileUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class FileUtils {
 
     public static String getContentFrom(String filePath) {
         String content = null;

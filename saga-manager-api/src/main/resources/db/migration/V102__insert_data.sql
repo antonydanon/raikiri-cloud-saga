@@ -1,1 +1,1 @@
-insert into statuses (name) values ('COMPLETED'), ('CANCELED');
+INSERT INTO statuses (name) VALUES ('COMPLETED'), ('CANCELED');

@@ -1,7 +1,8 @@
 package com.example.notificationapi.controller;
 
-import com.example.notificationapi.dto.NotificationRequest;
-import com.example.notificationapi.dto.NotificationResponse;
+import com.example.notificationapi.dto.NotificationSaveDtoRequest;
+import com.example.notificationapi.dto.NotificationSaveDtoResponse;
+import com.example.notificationapi.model.Notification;
 import com.example.notificationapi.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,9 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @PostMapping
-    public ResponseEntity<NotificationResponse> save(@RequestBody NotificationRequest notificationRequest) {
-        return ResponseEntity.ok(notificationService.save(notificationRequest));
+    public NotificationSaveDtoResponse save(@RequestBody NotificationSaveDtoRequest request) {
+        Notification notification = notificationService.save(request.txId(), request.message());
+        return new NotificationSaveDtoResponse(notification.getId());
     }
 
     @DeleteMapping("/rollback/{txId}")

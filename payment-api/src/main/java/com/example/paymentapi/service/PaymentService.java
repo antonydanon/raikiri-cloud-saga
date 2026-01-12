@@ -1,12 +1,12 @@
 package com.example.paymentapi.service;
 
-import com.example.paymentapi.dto.PaymentRequest;
-import com.example.paymentapi.dto.PaymentResponse;
 import com.example.paymentapi.model.Payment;
 import com.example.paymentapi.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -15,13 +15,12 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public PaymentResponse save(PaymentRequest paymentRequest) {
+    public Payment save(String txId, BigDecimal amount) {
         simulateError();
         Payment payment = new Payment();
-        payment.setTxId(paymentRequest.getTxId());
-        payment.setAmount(paymentRequest.getAmount());
-        Payment savedPayment = paymentRepository.save(payment);
-        return new PaymentResponse(savedPayment.getId());
+        payment.setTxId(txId);
+        payment.setAmount(amount);
+        return paymentRepository.save(payment);
     }
 
     @Transactional

@@ -1,7 +1,5 @@
 package com.example.notificationapi.service;
 
-import com.example.notificationapi.dto.NotificationRequest;
-import com.example.notificationapi.dto.NotificationResponse;
 import com.example.notificationapi.model.Notification;
 import com.example.notificationapi.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
 
-    public NotificationResponse save(NotificationRequest notificationRequest) {
+    public Notification save(String txId, String message) {
         Notification notification = new Notification();
-        notification.setTxId(notificationRequest.getTxId());
-        notification.setMessage(notificationRequest.getMessage());
-        Notification savedNotification = notificationRepository.save(notification);
-        return new NotificationResponse(savedNotification.getId());
+        notification.setTxId(txId);
+        notification.setMessage(message);
+        return notificationRepository.save(notification);
     }
 
     @Transactional
