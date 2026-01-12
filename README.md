@@ -15,7 +15,7 @@ restaurant-api -> courier-api -> payment-api -> notification-api.
 
 Пример запроса, чтобы получить информацию по транзакциям:
 
-`curl "http://localhost:8081/saga-manager-api/transactions?statuses=COMPLETED,CANCELED&startDate=2026-01-12%2000:00:00&endDate=2026-01-19%2000:00:00&countPerPage=10&pageNumber=0"`
+`curl 'http://localhost:8081/saga-manager-api/transactions?statuses=COMPLETED,CANCELED&startDate=2026-01-12 00:00:00&endDate=2026-01-19 00:00:00&countPerPage=10&pageNumber=0'`
 
 Eureka server: http://localhost:8761/
 API Gateway: http://localhost:8081/
