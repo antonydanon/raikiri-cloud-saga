@@ -7,7 +7,7 @@
 [https://github.com/conductor-oss/java-sdk](https://github.com/conductor-oss/java-sdk)
 
 ## Как запустить
-
+```bash
 git clone https://github.com/antonydanon/raikiri-cloud-saga.git
 docker compose build
 docker compose up
