@@ -12,7 +12,7 @@ public class Status {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Enumerated(value = EnumType.STRING)
     private StatusName name;
