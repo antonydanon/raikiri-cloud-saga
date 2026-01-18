@@ -2,6 +2,17 @@ version: '3.8'
 
 services:
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "${DEFAULT_REDIS_PORT}:${DEFAULT_REDIS_PORT}"
+    volumes:
+      - redis_data:/data
+    networks:
+      - raikiri-cloud-saga-net
+
   kafka:
     image: apache/kafka:latest
     container_name: kafka
@@ -22,6 +33,8 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - raikiri-cloud-saga-net
 
   conductor-service:
     image: conductoross/conductor-standalone:3.15.0
@@ -288,6 +301,7 @@ volumes:
   pg_saga_manager_data:
   conductor_data:
   kafka_data:
+  redis_data:
 
 networks:
   raikiri-cloud-saga-net:
