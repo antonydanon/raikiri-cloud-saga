@@ -2,6 +2,27 @@ version: '3.8'
 
 services:
 
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    hostname: kafka
+    restart: unless-stopped
+    ports:
+      - "${DEFAULT_KAFKA_PORT}:${DEFAULT_KAFKA_PORT}"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
   conductor-service:
     image: conductoross/conductor-standalone:3.15.0
     container_name: conductor-service
@@ -226,6 +247,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-notification:${DEFAULT_POSTGRES_PORT}/${NOTIFICATION_DATABASE_NAME}
       - SPRING_DATASOURCE_USERNAME=${DEFAULT_POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:${DEFAULT_KAFKA_PORT}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
     depends_on:
       conductor-service:
@@ -233,6 +255,27 @@ services:
       eureka-server:
         condition: service_started
       postgres-notification:
+        condition: service_started
+      kafka:
+        condition: service_started
+    networks:
+      - raikiri-cloud-saga-net
+
+  loyalty-api:
+    build: ./loyalty-api
+    container_name: loyalty-api
+    ports:
+      - "${LOYALTY_API_PORT}:${DEFAULT_SERVER_PORT}"
+    environment:
+      - SERVER_PORT=${DEFAULT_SERVER_PORT}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:${DEFAULT_KAFKA_PORT}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
+    depends_on:
+      conductor-service:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      kafka:
         condition: service_started
     networks:
       - raikiri-cloud-saga-net
@@ -244,6 +287,7 @@ volumes:
   pg_notification_data:
   pg_saga_manager_data:
   conductor_data:
+  kafka_data:
 
 networks:
   raikiri-cloud-saga-net:
